@@ -2,13 +2,10 @@ from datetime import date
 import requests
 import argparse
 
-cookie = None
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--data",help="data (dd-mm-YYYY) para as consultas. Omissão ou data inválida sinaliza data de hoje")
 data_arg = parser.parse_args()
 
-## Preencher credenciais
 #login =
 #senha =
 
@@ -33,16 +30,17 @@ def usarHoje():
     return ano, mes, dia, data_completa
 
 def download():
-    if s.cookies.get('inlabs_session_cookie'):
-        cookie = s.cookies.get('inlabs_session_cookie')
-    else:
-        print("Falha ao obter cookie. Verifique suas credenciais");
+    cookie = str()
+    cookie = s.cookies.get('inlabs_session_cookie')
+
+    if(not cookie):
+        print("Falha ao obter cookie. Verifique suas credenciais")
         exit(37)
 
     data_manual = data_arg.data
 
     if(data_manual):
-        print("Atenção: até 11/03/2026, esta opção permitia apenas consulta de arquivos dos últimos quatro meses anteriores a hoje, "+date.today().strftime("%d/%m/%Y")+". Aconselha-se que o usuário verifique https://inlabs.in.gov.br/index.php?p= para visualizar os arquivos disponíveis.")
+        print("Atenção: conforme testado até 11/03/2026, esta opção permitia apenas consulta de arquivos dos últimos quatro meses anteriores a hoje, "+date.today().strftime("%d/%m/%Y")+". Aconselha-se que o usuário verifique https://inlabs.in.gov.br/index.php?p= para visualizar os arquivos disponíveis.")
         ano = data_manual[6:]
         mes = data_manual[3:5]
         dia = data_manual[:2]
@@ -83,4 +81,3 @@ def login():
         login()
 
 login()
-download()
